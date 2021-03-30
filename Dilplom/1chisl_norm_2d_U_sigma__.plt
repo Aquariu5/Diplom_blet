@@ -1,0 +1,5 @@
+set zrange[-1000:1000]
+set ticslevel 0
+set view 0, 90, 1, 1
+splot "ch_norm_2d_sigma_U100.txt" matrix w pm3d
+#set zrange[-10000000000000000000000000000000000:10000000000000000000000000000000000000]
