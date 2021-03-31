@@ -906,53 +906,25 @@ void temptest2d::perkolation(int min_len, int max_len, std::vector<std::vector<i
 				std::cout << e.what() << std::endl;
 			}
 			fractures[x][y] = 1;
-
-			fractures[x][y] = 1;
-
-			fracture_centers[x][y] = 1;
 			fracture_centers[x][y] = 1;
 
 			if (rand() % 2 == 0) // vert
 			{
 				for (int i = 1; i <= len; ++i)
 				{
-					/*if (x - i < 0)
-					{
-						fractures[0][y] = 1;
-						fractures[0][y + 1] = 1;
-						fractures[0][y + 2] = 1;
-					}
-					else
-					{
-						fractures[x - i][y] = 1;
-						fractures[x - i][y + 1] = 1;
-						fractures[x - i][y + 2] = 1;
-					}
-
-					if (x + i > n - d)
-					{
-						fractures[n - d][y] = 1;
-						fractures[n - d][y + 1] = 1;
-						fractures[n - d][y + 2] = 1;
-					}
-					else
-					{
-						fractures[x + i][y] = 1;
-						fractures[x + i][y + 1] = 1;
-						fractures[x + i][y + 2] = 1;
-					}*/
-					fractures[x][y - 1] = 1;
-					fractures[x][y + 1] = 1;
+					
+					//fractures[x][y - 1] = 1;
+					//fractures[x][y + 1] = 1;
 					if (x + i > n - d || x - i < d)
 						break;
 
-					fractures[x - i][y - 1] = 1;
+					//fractures[x - i][y - 1] = 1;
 					fractures[x - i][y] = 1;
-					fractures[x - i][y + 1] = 1;
+					//fractures[x - i][y + 1] = 1;
 
-					fractures[x + i][y - 1] = 1;
+					//fractures[x + i][y - 1] = 1;
 					fractures[x + i][y] = 1;
-					fractures[x + i][y + 1] = 1;
+					//fractures[x + i][y + 1] = 1;
 				}
 
 			}
@@ -960,43 +932,18 @@ void temptest2d::perkolation(int min_len, int max_len, std::vector<std::vector<i
 			{
 				for (int i = 1; i <= len; ++i)
 				{
-					fractures[x - 1][y] = 1;
-					fractures[x + 1][y] = 1;
+					//fractures[x - 1][y] = 1;
+					//fractures[x + 1][y] = 1;
 					if (y + i > n - d || y - i < d)
 						break;
 
-					fractures[x - 1][y + i] = 1;
+					//fractures[x - 1][y + i] = 1;
 					fractures[x][y + i] = 1;
-					fractures[x + 1][y + i] = 1;
+					//fractures[x + 1][y + i] = 1;
 
-					fractures[x - 1][y - i] = 1;
+					//fractures[x - 1][y - i] = 1;
 					fractures[x][y - i] = 1;
-					fractures[x + 1][y - i] = 1;
-					/*if (y - i < 0)
-					{
-						fractures[x][0] = 1;
-						fractures[x + 1][0] = 1;
-						fractures[x + 1][0] = 1;
-					}
-					else
-					{
-						fractures[x][y - i] = 1;
-						fractures[x + 1][y - i] = 1;
-						fractures[x + 2][y - i] = 1;
-					}
-
-					if (y + i > n - d)
-					{
-						fractures[x][n - d] = 1;
-						fractures[x + 1][n - d] = 1;
-						fractures[x + 2][n - d] = 1;
-					}
-					else
-					{
-						fractures[x][y + i] = 1;
-						fractures[x + 1][y + i] = 1;
-						fractures[x + 2][y + i] = 1;
-					}*/
+					//fractures[x + 1][y - i] = 1;
 				}
 			}
 		}
@@ -1042,20 +989,25 @@ void temptest2d::pyroman()
 	double f2 = 5;
 	int k = 0;
 
+	fractures2 = fractures1; // инит fractures который будет немножко изменен (нужно чтобы трещины не повернулись на 90 градусов а остались теми же кроме тех, у кого центры поменялись)
 	while (true)
 	{
-		change_some_centers(fracture_centers1, fracture_centers2, 0.01); // изменить процент центров трещин и поместить в (fracture_centers2)
-		
-		//std::cout << "after changing centers" << std::endl;
-		//std::cout << "frcent1count " << fracture_centers_count(fracture_centers1) << std::endl;
-		////std::cout << "frt1count " << fracture_centers_count(fractures1) << std::endl;
-		//std::cout << "frcent2count " << fracture_centers_count(fracture_centers2) << std::endl;
-		////std::cout << "frt2count " << fracture_centers_count(fractures2) << std::endl;
+		//change_some_centers(fracture_centers1, fracture_centers2, 0.01); // изменить процент центров трещин и поместить в (fracture_centers2) (old ver)
+		std::vector<std::pair<int, int>> old_coords;
+		std::vector<std::pair<int, int>> new_coords;
+		change_some_centers_with_pairs(fracture_centers1, old_coords, new_coords, 0.01); // заполнение old_coords, new_coords
+
+		std::cout << "after changing centers" << std::endl;
+		std::cout << "frcent1count " << fracture_centers_count(fracture_centers1) << std::endl;
+		std::cout << "frt1count " << fracture_centers_count(fractures1) << std::endl;
+		std::cout << "frcent2count " << fracture_centers_count(fracture_centers2) << std::endl;
+		std::cout << "frt2count " << fracture_centers_count(fractures2) << std::endl;
 		
 		// fractures1 хранит сами трещины
 		// 
-		fill_lengths_having_centers(fracture_centers2, fractures2, lmin, lmax); // заполнение (fractures2) (n - 1) / 100 = 5, (n - 1) / 50 = 10
-		
+		fracture_centers2 = fracture_centers1; // копируем, затем на основе вектора пар заменим без всяких циклов
+		//fill_lengths_having_centers(fracture_centers2, fractures2, lmin, lmax); // заполнение (fractures2) (n - 1) / 100 = 5, (n - 1) / 50 = 10 (old ver)
+		fill_lengths_having_centers_with_pairs(fracture_centers2, fractures2, old_coords, new_coords, lmin, lmax);
 		//std::cout << "---------------------" << std::endl;
 		//std::cout << "after filling lengths" << std::endl;
 		//std::cout << "frcent1count " << fracture_centers_count(fracture_centers1) << std::endl;
@@ -1191,9 +1143,82 @@ void temptest2d::change_some_centers(const std::vector<std::vector<int>>& fractu
 	} // while
 }
 
+void temptest2d::change_some_centers_with_pairs(const std::vector<std::vector<int>>& fracture_centers1, std::vector<std::pair<int, int>>& old_coords, std::vector<std::pair<int, int>>& new_coords, double perc)
+{
+	int count1 = fracture_centers_count(fracture_centers1);
+	if (count1 == 0)
+	{
+		std::cout << "Null vector of fractures centers1 change some centers" << std::endl;
+		return;
+	}
+	int count2 = count1 * perc;
+
+	//fracture_centers2 = fracture_centers1;
+	if (count2 == 0)
+	{
+		std::cout << "count2 is zero!!!!" << std::endl;
+		return;
+	}
+	/*for (int i = d; i < n - d; ++i)
+	{
+		for (int j = d; j < n - d; ++j)
+		{
+			i
+		}
+	}*/
+	while (count2 > 0)
+	{
+		int x = d + rand() % (n - 2 * d);
+		int y = d + rand() % (n - 2 * d);
+
+		//std::cout << "x: " << x << std::endl;
+		//std::cout << "y: " << y << std::endl;
+		//for (int i = d; i < n - d; ++i)
+		//{
+		int i = d + rand() % (n - 2 * d);
+		int chance = rand() % 2;
+		if (chance == 0)
+		{
+			if (fracture_centers1[i][y] == 1) // если нашлась строка с фикс столбцом (i,y)
+			{
+				int newcol = d + rand() % (n - 2 * d); // уносим на совсем др столбец
+				if (fracture_centers1[x][newcol] == 0)
+				{
+					//fracture_centers1[i][y] = 0; // зануляем старое значение
+					old_coords.push_back({ i, y });
+					//fracture_centers1[x][newcol] = 1; // переносим на новое место единицу
+					new_coords.push_back({ x, newcol });
+					--count2;
+				}
+			}
+		}
+		else
+		{
+			if (fracture_centers1[x][i] == 1) // (x,i)
+			{
+				//x = d + rand() % (n - 2 * d); // уносим совсем на др строку
+				int newrow = d + rand() % (n - 2 * d); // уносим на совсем др строку
+				if (fracture_centers1[newrow][y] == 0)
+				{
+					//fracture_centers1[x][i] = 0; // зануляем старое значение
+					old_coords.push_back({ x, i });
+					//fracture_centers1[newrow][y] = 1; // переносим на новое место единиуц
+					new_coords.push_back({ newrow, y });
+					--count2;
+				}
+			}
+		}
+
+		//} // for
+
+	} // while
+}
+
 void temptest2d::fill_lengths_having_centers(const std::vector<std::vector<int>>& fractures_centers, std::vector<std::vector<int>>& fractures, int min_len, int max_len)
 {
+	// 
 	int count = fracture_centers_count(fractures_centers); // центры
+
 	int len = 0;
 	if (min_len == max_len)
 	{
@@ -1256,6 +1281,90 @@ void temptest2d::fill_lengths_having_centers(const std::vector<std::vector<int>>
 	}
 }
 
+// horiz == true, vert == false
+void temptest2d::update_fracture(std::vector<std::vector<int>>& fractures, const std::pair<int, int> &old_point, const std::pair<int, int> &new_point, int len)
+{
+	int vert_count = 0;
+	int horiz_count = 0;
+	//int value = old_point.first == std::pair<int, int>().first && old_point.second == std::pair<int, int>().second ? 1 : 0; // если old point пустой, значит new_point задан и заполняется единицами (значение которым будет заполнен вектор)
+
+	//std::pair<int, int> point = value == 1 ? new_point : old_point;
+
+	// случай, если задан old_point, т.е. хотим опеределить тип трещины, чтобы занулить
+	for (int i = -len; i <= len; ++i) 
+	{
+		if (fractures[old_point.first + i][old_point.second] == 1) { // вертикалка
+			++vert_count;
+		}
+
+		if (fractures[old_point.first][old_point.second + i] == 1) { // горизонталка
+			++horiz_count;
+		}
+	}
+
+	//процесс удоления старой трещИны
+	if (horiz_count > vert_count) { // горизонт стопудов
+
+		for (int i = -len; i <= len; ++i)
+		{
+			if (fractures[old_point.first][old_point.second + i] == 1) { // горизонталка (столб меняется)
+
+				if (fractures[old_point.first + 1][old_point.second + i] == 0 && fractures[old_point.first - 1][old_point.second + i] == 0) // если трещина не пересекает вертикальную
+					fractures[old_point.first][old_point.second + i] = 0; // зануляем старую трещИну увы
+			}
+
+			fractures[new_point.first][new_point.second + i] = 1; // добавляем новую трещину
+		}
+
+	}
+	else 
+	{
+		for (int i = -len; i <= len; ++i)
+		{
+			if (fractures[old_point.first + i][old_point.second] == 1) { // вертикалка ( строка меняется)
+
+				if (fractures[old_point.first + i][old_point.second + 1] == 0 && fractures[old_point.first + i][old_point.second - 1] == 0) // если трещина не пересекает горизонтальную
+					fractures[old_point.first + i][old_point.second] = 0;
+			}
+
+			fractures[new_point.first + i][new_point.second] = 1; // добавляем новую трещину
+		}
+	}
+}
+
+void temptest2d::fill_lengths_having_centers_with_pairs(std::vector<std::vector<int>>& fractures_centers, std::vector<std::vector<int>>& fractures, const std::vector<std::pair<int, int>>& old_coords, const std::vector<std::pair<int, int>>& new_coords, int min_len, int max_len)
+{
+	// fracture_centers заполнен без правок
+
+	int len = 0;
+	if (min_len == max_len)
+	{
+		len = min_len;
+	}
+	else
+	{
+		len = min_len + rand() % (max_len - min_len);
+	}
+	
+	//обновим fracture_centers
+	//теперь поправим fracture (затронем только лишь трешины центры которых есть в парах
+	//занулим
+
+	if (old_coords.size() != new_coords.size()) {
+		std::cout << "Different dimentions for pairs!" << std::endl;
+		return;
+	}
+
+	for (int i = 0; i < old_coords.size(); ++i) // проход по обоим парам
+	{
+		fractures_centers[old_coords[i].first][old_coords[i].second] = 0;
+		fractures_centers[new_coords[i].first][new_coords[i].second] = 1;
+
+		update_fracture(fractures, old_coords[i], new_coords[i], max_len); // обновить трещИну
+		
+	}
+
+}
 int temptest2d::fracture_centers_count(const std::vector<std::vector<int>>& fracture_centers)
 {
 	int Nfrac = 0;
@@ -1562,43 +1671,19 @@ void temptest2d::perkolation_old(int min_len, int max_len, std::vector<std::vect
 			{
 				for (int i = 1; i <= len; ++i)
 				{
-					/*if (x - i < 0)
-					{
-						fractures[0][y] = 1;
-						fractures[0][y + 1] = 1;
-						fractures[0][y + 2] = 1;
-					}
-					else
-					{
-						fractures[x - i][y] = 1;
-						fractures[x - i][y + 1] = 1;
-						fractures[x - i][y + 2] = 1;
-					}
-
-					if (x + i > n - d)
-					{
-						fractures[n - d][y] = 1;
-						fractures[n - d][y + 1] = 1;
-						fractures[n - d][y + 2] = 1;
-					}
-					else
-					{
-						fractures[x + i][y] = 1;
-						fractures[x + i][y + 1] = 1;
-						fractures[x + i][y + 2] = 1;
-					}*/
+					
 					fractures[x][y - 1] = 1;
 					fractures[x][y + 1] = 1;
 					if (x + i > n - d || x - i < d)
 						break;
 
-					fractures[x - i][y - 1] = 1;
+					//fractures[x - i][y - 1] = 1;
 					fractures[x - i][y] = 1;
-					fractures[x - i][y + 1] = 1;
+					//fractures[x - i][y + 1] = 1;
 
-					fractures[x + i][y - 1] = 1;
+					//fractures[x + i][y - 1] = 1;
 					fractures[x + i][y] = 1;
-					fractures[x + i][y + 1] = 1;
+					//fractures[x + i][y + 1] = 1;
 				}
 
 			}
@@ -1606,43 +1691,19 @@ void temptest2d::perkolation_old(int min_len, int max_len, std::vector<std::vect
 			{
 				for (int i = 1; i <= len; ++i)
 				{
-					fractures[x - 1][y] = 1;
-					fractures[x + 1][y] = 1;
+					//fractures[x - 1][y] = 1;
+					//fractures[x + 1][y] = 1;
 					if (y + i > n - d || y - i < d)
 						break;
 
-					fractures[x - 1][y + i] = 1;
+					//fractures[x - 1][y + i] = 1;
 					fractures[x][y + i] = 1;
-					fractures[x + 1][y + i] = 1;
+					//fractures[x + 1][y + i] = 1;
 
-					fractures[x - 1][y - i] = 1;
+					//fractures[x - 1][y - i] = 1;
 					fractures[x][y - i] = 1;
-					fractures[x + 1][y - i] = 1;
-					/*if (y - i < 0)
-					{
-						fractures[x][0] = 1;
-						fractures[x + 1][0] = 1;
-						fractures[x + 1][0] = 1;
-					}
-					else
-					{
-						fractures[x][y - i] = 1;
-						fractures[x + 1][y - i] = 1;
-						fractures[x + 2][y - i] = 1;
-					}
-
-					if (y + i > n - d)
-					{
-						fractures[x][n - d] = 1;
-						fractures[x + 1][n - d] = 1;
-						fractures[x + 2][n - d] = 1;
-					}
-					else
-					{
-						fractures[x][y + i] = 1;
-						fractures[x + 1][y + i] = 1;
-						fractures[x + 2][y + i] = 1;
-					}*/
+					//fractures[x + 1][y - i] = 1;
+					
 				}
 			}
 		}

@@ -30,8 +30,28 @@ public:
 	void perkolation(int min_len, int max_len, std::vector<std::vector<int>>& fractures, std::vector<std::vector<int>>& fracture_centers, double proc);
 	void pyroman();
 	double Pacc(double delta_f);
+
 	void change_some_centers(const std::vector<std::vector<int>>& fracture_centers1, std::vector<std::vector<int>>& fracture_centers2, double perc);
-	void fill_lengths_having_centers(const std::vector<std::vector<int>>& fractures_centers, std::vector<std::vector<int>>& fractures, int min_len, int max_len);
+	void change_some_centers_with_pairs(const std::vector<std::vector<int>>& fracture_centers1, std::vector<std::pair<int, int>>& old_coords, std::vector<std::pair<int, int>>& new_coords, double perc);
+
+	void fill_lengths_having_centers(
+		const std::vector<std::vector<int>>& fractures_centers,
+		std::vector<std::vector<int>>& fractures,
+		int min_len,
+		int max_len
+	);
+
+	void update_fracture(std::vector<std::vector<int>>& fractures, const std::pair<int, int>& old_point, const std::pair<int, int>& new_point, int len);
+
+	void fill_lengths_having_centers_with_pairs(
+		std::vector<std::vector<int>>& fractures_centers, // поправим на основе пар координаты
+		std::vector<std::vector<int>>& fractures,
+		const std::vector<std::pair<int, int>>& old_coords,
+		const std::vector<std::pair<int, int>>& new_coords,
+		int min_len,
+		int max_len
+	);
+
 	int fracture_centers_count(const std::vector<std::vector<int>>& fracture_centers);
 	void null_vector(std::vector<std::vector<int>>& fracture_centers);
 	///

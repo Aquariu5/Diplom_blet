@@ -1,14 +1,4 @@
-﻿  adept.cpp
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\adept.h(610,28): warning C4267: return: преобразование из "size_t" в "adept::Offset"; возможна потеря данных
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\adept.h(611,26): warning C4267: return: преобразование из "size_t" в "adept::Offset"; возможна потеря данных
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\adept.h(820,35): warning C4267: return: преобразование из "size_t" в "adept::Offset"; возможна потеря данных
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\adept.h(821,33): warning C4267: return: преобразование из "size_t" в "adept::Offset"; возможна потеря данных
-  adept_openmp.cpp
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\adept.h(610,28): warning C4267: return: преобразование из "size_t" в "adept::Offset"; возможна потеря данных
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\adept.h(611,26): warning C4267: return: преобразование из "size_t" в "adept::Offset"; возможна потеря данных
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\adept.h(820,35): warning C4267: return: преобразование из "size_t" в "adept::Offset"; возможна потеря данных
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\adept.h(821,33): warning C4267: return: преобразование из "size_t" в "adept::Offset"; возможна потеря данных
-  main.cpp
+﻿  main.cpp
 C:\Users\aydar\Diplom\Diplom_blet\Dilplom\adept.h(610,28): warning C4267: return: преобразование из "size_t" в "adept::Offset"; возможна потеря данных
 C:\Users\aydar\Diplom\Diplom_blet\Dilplom\adept.h(611,26): warning C4267: return: преобразование из "size_t" в "adept::Offset"; возможна потеря данных
 C:\Users\aydar\Diplom\Diplom_blet\Dilplom\adept.h(820,35): warning C4267: return: преобразование из "size_t" в "adept::Offset"; возможна потеря данных
@@ -22,25 +12,9 @@ C:\Users\aydar\Diplom\Diplom_blet\Dilplom\adept.h(821,33): warning C4267: return
 C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest2d.cpp(28,14): warning C4244: =: преобразование "double" в "int", возможна потеря данных
 C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest2d.cpp(32,9): warning C4244: =: преобразование "double" в "int", возможна потеря данных
 C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest2d.cpp(871,10): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest2d.cpp(1135,13): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest2d.cpp(1409,20): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest2d.cpp(1412,20): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-  temptest.cpp
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\adept.h(610,28): warning C4267: return: преобразование из "size_t" в "adept::Offset"; возможна потеря данных
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\adept.h(611,26): warning C4267: return: преобразование из "size_t" в "adept::Offset"; возможна потеря данных
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\adept.h(820,35): warning C4267: return: преобразование из "size_t" в "adept::Offset"; возможна потеря данных
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\adept.h(821,33): warning C4267: return: преобразование из "size_t" в "adept::Offset"; возможна потеря данных
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\mymath.h(37,9): warning C4101: num: неиспользованная локальная переменная
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest.cpp(13,14): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest.cpp(518,1): warning C4010: однострочный комментарий содержит знак объединения строк
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest.cpp(519,1): warning C4010: однострочный комментарий содержит знак объединения строк
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest.cpp(520,1): warning C4010: однострочный комментарий содержит знак объединения строк
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest.cpp(521,1): warning C4010: однострочный комментарий содержит знак объединения строк
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest.cpp(523,1): warning C4010: однострочный комментарий содержит знак объединения строк
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest.cpp(524,1): warning C4010: однострочный комментарий содержит знак объединения строк
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest.cpp(525,1): warning C4010: однострочный комментарий содержит знак объединения строк
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest.cpp(526,1): warning C4010: однострочный комментарий содержит знак объединения строк
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest.cpp(966,2): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest.cpp(983,2): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest2d.cpp(1140,13): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest2d.cpp(1207,13): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest2d.cpp(1571,20): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\aydar\Diplom\Diplom_blet\Dilplom\temptest2d.cpp(1574,20): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
   Создание кода...
   Dilplom.vcxproj -> C:\Users\aydar\Diplom\Diplom_blet\x64\Debug\Dilplom.exe
