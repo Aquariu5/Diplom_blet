@@ -972,7 +972,7 @@ void temptest2d::pyroman()
 	int lmax = (n - 1) / 100;
 	try
 	{
-		perkolation(lmin, lmax, fractures1, fracture_centers1, 0.25); // от 5 до 10 длины (при проценте от 0.25 до 0.5 опускается до 0.12 - 0.13)
+		perkolation(lmin, lmax, fractures1, fracture_centers1, 0.5); // от 5 до 10 длины (при проценте от 0.25 до 0.5 опускается до 0.12 - 0.13)
 
 		/*fracture_centers1[n / 2][n / 2] = 1;
 		for (int i = d; i < n - d; ++i)
@@ -995,26 +995,36 @@ void temptest2d::pyroman()
 		//change_some_centers(fracture_centers1, fracture_centers2, 0.01); // изменить процент центров трещин и поместить в (fracture_centers2) (old ver)
 		std::vector<std::pair<int, int>> old_coords;
 		std::vector<std::pair<int, int>> new_coords;
-		change_some_centers_with_pairs(fracture_centers1, old_coords, new_coords, 0.01); // заполнение old_coords, new_coords
+		change_some_centers_with_pairs(fracture_centers1, old_coords, new_coords, 0.01); // заполнение old_coords, new_coords на основе fr_cents1
 
-		std::cout << "after changing centers" << std::endl;
+		std::cout << "-----after changing centers-----" << std::endl;
+		std::cout << "frcent1count " << fracture_centers_count(fracture_centers1) << std::endl;
+		std::cout << "frt1count " << fracture_centers_count(fractures1) << std::endl;
+		std::cout << "frcent2count " << fracture_centers_count(fracture_centers2) << std::endl;
+		std::cout << "frt2count " << fracture_centers_count(fractures2) << std::endl;
+		std::cout << "----------------------" << std::endl;
+		// fractures1 хранит сами трещины
+		// 
+
+		//fill_lengths_having_centers(fracture_centers2, fractures2, lmin, lmax); // заполнение (fractures2) (n - 1) / 100 = 5, (n - 1) / 50 = 10 (old ver)
+
+		fracture_centers2 = fracture_centers1; // копируем, затем на основе вектора пар заменим без всяких циклов
+		fractures2 = fractures1; // видоизменим немного на основе fractures1
+		fill_lengths_having_centers_with_pairs(fracture_centers2, fractures2, old_coords, new_coords, lmin, lmax); // меняем fractures2 и fr_centers2
+
+		/*std::cout << "---------------------" << std::endl;
+		std::cout << "after filling lengths" << std::endl;
 		std::cout << "frcent1count " << fracture_centers_count(fracture_centers1) << std::endl;
 		std::cout << "frt1count " << fracture_centers_count(fractures1) << std::endl;
 		std::cout << "frcent2count " << fracture_centers_count(fracture_centers2) << std::endl;
 		std::cout << "frt2count " << fracture_centers_count(fractures2) << std::endl;
 		
-		// fractures1 хранит сами трещины
-		// 
-		fracture_centers2 = fracture_centers1; // копируем, затем на основе вектора пар заменим без всяких циклов
-		//fill_lengths_having_centers(fracture_centers2, fractures2, lmin, lmax); // заполнение (fractures2) (n - 1) / 100 = 5, (n - 1) / 50 = 10 (old ver)
-		fill_lengths_having_centers_with_pairs(fracture_centers2, fractures2, old_coords, new_coords, lmin, lmax);
-		//std::cout << "---------------------" << std::endl;
-		//std::cout << "after filling lengths" << std::endl;
-		//std::cout << "frcent1count " << fracture_centers_count(fracture_centers1) << std::endl;
-		////std::cout << "frt1count " << fracture_centers_count(fractures1) << std::endl;
-		//std::cout << "frcent2count " << fracture_centers_count(fracture_centers2) << std::endl;
-		////std::cout << "frt2count " << fracture_centers_count(fractures2) << std::endl;
-		
+		write_fractures(fractures1, -1);
+		write_fractures(fractures2, -2);
+
+		write_fractures(fracture_centers1, -10);
+		write_fractures(fracture_centers2, -20);*/
+
 		double f1 = f_computing(fractures1, fracture_centers1);
 		
 		std::cout << "f1 " << f1 << std::endl;
@@ -1035,12 +1045,12 @@ void temptest2d::pyroman()
 			fractures1 = fractures2; // теперь fractures1 обновился, через него опять изменится fractures2, т.е. новый f1 будет совпадать со старым f2
 			fracture_centers1 = fracture_centers2;
 
-			//std::cout << "---------------------" << std::endl;
-			//std::cout << "after delta < 0" << std::endl;
-			//std::cout << "frcent1count " << fracture_centers_count(fracture_centers1) << std::endl;
-			////std::cout << "frt1count " << fracture_centers_count(fractures1) << std::endl;
-			//std::cout << "frcent2count " << fracture_centers_count(fracture_centers2) << std::endl;
-			////std::cout << "frt2count " << fracture_centers_count(fractures2) << std::endl;
+			/*std::cout << "---------------------" << std::endl;
+			std::cout << "after delta < 0" << std::endl;
+			std::cout << "frcent1count " << fracture_centers_count(fracture_centers1) << std::endl;
+			std::cout << "frt1count " << fracture_centers_count(fractures1) << std::endl;
+			std::cout << "frcent2count " << fracture_centers_count(fracture_centers2) << std::endl;
+			std::cout << "frt2count " << fracture_centers_count(fractures2) << std::endl;*/
 
 			write_fractures(fractures1, k++);
 		}
@@ -1055,16 +1065,17 @@ void temptest2d::pyroman()
 				fractures1 = fractures2; // теперь fractures1 обновился, через него опять изменится fractures2, т.е. новый f1 будет совпадать со старым f2
 				fracture_centers1 = fracture_centers2;
 
-				//std::cout << "---------------------" << std::endl;
-				//std::cout << "after accepting perkolation" << std::endl;
-				//std::cout << "frcent1count " << fracture_centers_count(fracture_centers1) << std::endl;
-				////std::cout << "frt1count " << fracture_centers_count(fractures1) << std::endl;
-				//std::cout << "frcent2count " << fracture_centers_count(fracture_centers2) << std::endl;
-				////std::cout << "frt2count " << fracture_centers_count(fractures2) << std::endl;
+				/*std::cout << "---------------------" << std::endl;
+				std::cout << "after accepting perkolation" << std::endl;
+				std::cout << "frcent1count " << fracture_centers_count(fracture_centers1) << std::endl;
+				std::cout << "frt1count " << fracture_centers_count(fractures1) << std::endl;
+				std::cout << "frcent2count " << fracture_centers_count(fracture_centers2) << std::endl;
+				std::cout << "frt2count " << fracture_centers_count(fractures2) << std::endl;*/
 			}
 			else
 			{
 				// иначе fracture1 остается без изменений и по новому изменится 1% всех трещин
+				// на данный момент fractures1 - ниче такой и fractures2 - ужасный
 				std::cout << "declined perkolation" << std::endl;
 			}
 		}
@@ -1177,7 +1188,7 @@ void temptest2d::change_some_centers_with_pairs(const std::vector<std::vector<in
 		//{
 		int i = d + rand() % (n - 2 * d);
 		int chance = rand() % 2;
-		if (chance == 0)
+		if (chance == 0) // проход по строке
 		{
 			if (fracture_centers1[i][y] == 1) // если нашлась строка с фикс столбцом (i,y)
 			{
@@ -1192,7 +1203,7 @@ void temptest2d::change_some_centers_with_pairs(const std::vector<std::vector<in
 				}
 			}
 		}
-		else
+		else // по столбцу
 		{
 			if (fracture_centers1[x][i] == 1) // (x,i)
 			{
@@ -1309,7 +1320,7 @@ void temptest2d::update_fracture(std::vector<std::vector<int>>& fractures, const
 		{
 			if (fractures[old_point.first][old_point.second + i] == 1) { // горизонталка (столб меняется)
 
-				if (fractures[old_point.first + 1][old_point.second + i] == 0 && fractures[old_point.first - 1][old_point.second + i] == 0) // если трещина не пересекает вертикальную
+				if (fractures[old_point.first + 1][old_point.second + i] == 0 || fractures[old_point.first - 1][old_point.second + i] == 0) // если трещина не пересекает вертикальную
 					fractures[old_point.first][old_point.second + i] = 0; // зануляем старую трещИну увы
 			}
 
@@ -1323,7 +1334,7 @@ void temptest2d::update_fracture(std::vector<std::vector<int>>& fractures, const
 		{
 			if (fractures[old_point.first + i][old_point.second] == 1) { // вертикалка ( строка меняется)
 
-				if (fractures[old_point.first + i][old_point.second + 1] == 0 && fractures[old_point.first + i][old_point.second - 1] == 0) // если трещина не пересекает горизонтальную
+				if (fractures[old_point.first + i][old_point.second + 1] == 0 || fractures[old_point.first + i][old_point.second - 1] == 0) // если трещина не пересекает горизонтальную
 					fractures[old_point.first + i][old_point.second] = 0;
 			}
 
