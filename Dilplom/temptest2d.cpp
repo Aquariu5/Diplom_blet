@@ -29,7 +29,7 @@ temptest2d::temptest2d(int n, int T, double tau)
 	
 	//отжиг
 	//fp
-	lw = d / 2.5; // длина для высчитывания fp
+	lw = d / 5; // длина для высчитывания fp
 	Nw = (n - 2 * d) / lw; // кол-во блоков в одном направлении 
 
 	//fd
@@ -989,6 +989,7 @@ void temptest2d::pyroman()
 	double f2 = 5;
 	int k = 0;
 
+	int max_iter = 5000;
 	fractures2 = fractures1; // инит fractures который будет немножко изменен (нужно чтобы трещины не повернулись на 90 градусов а остались теми же кроме тех, у кого центры поменялись)
 	while (true)
 	{
@@ -1053,6 +1054,12 @@ void temptest2d::pyroman()
 			std::cout << "frt2count " << fracture_centers_count(fractures2) << std::endl;*/
 
 			write_fractures(fractures1, k++);
+			std::cout << "k: " << k << std::endl;
+			if (k >= max_iter)
+			{
+				std::cout << "MAX ITERS: " << k << std::endl;
+				break;
+			}
 		}
 		else
 		{
@@ -1322,6 +1329,11 @@ void temptest2d::update_fracture(std::vector<std::vector<int>>& fractures, const
 
 				if (fractures[old_point.first + 1][old_point.second + i] == 0 || fractures[old_point.first - 1][old_point.second + i] == 0) // если трещина не пересекает вертикальную
 					fractures[old_point.first][old_point.second + i] = 0; // зануляем старую трещИну увы
+				else if (fractures[old_point.first + 1][old_point.second + i] == 1 && fractures[old_point.first - 1][old_point.second + i] == 1 &&
+					fractures[old_point.first - 2][old_point.second + i] == 0 && fractures[old_point.first + 2][old_point.second + i] == 0)// между двумя гориз трещинами
+				{
+					fractures[old_point.first][old_point.second + i] = 0; // зануляем старую трещИну увы
+				}
 			}
 
 			fractures[new_point.first][new_point.second + i] = 1; // добавляем новую трещину
@@ -1336,11 +1348,108 @@ void temptest2d::update_fracture(std::vector<std::vector<int>>& fractures, const
 
 				if (fractures[old_point.first + i][old_point.second + 1] == 0 || fractures[old_point.first + i][old_point.second - 1] == 0) // если трещина не пересекает горизонтальную
 					fractures[old_point.first + i][old_point.second] = 0;
+				else if (fractures[old_point.first + i][old_point.second + 1] == 1 && fractures[old_point.first  + i][old_point.second - 1] == 1 &&
+					fractures[old_point.first + i][old_point.second + 2] == 0 && fractures[old_point.first + i][old_point.second - 2] == 0)// между двумя гориз трещинами
+				{
+					fractures[old_point.first + i][old_point.second] = 0; // зануляем старую трещИну увы
+				}
 			}
 
 			fractures[new_point.first + i][new_point.second] = 1; // добавляем новую трещину
 		}
 	}
+}
+
+bool temptest2d::fromImageToVector(std::string filename, std::vector<std::vector<int>>& res, int& width, int& height)
+{
+	std::ifstream fp(filename, std::ifstream::binary);
+	uint8_t* bits;
+	if (!fp.is_open())
+		return false;
+
+	uint16_t ws[7];
+	fp.read((char*)&ws[0], sizeof(ws));
+	if (fp.fail() || (ws[0] != 0x4D42))
+		return false;
+
+	int32_t ds[10];
+	fp.read((char*)&ds[0], sizeof(ds));
+
+	int bpp = (int)(ds[3] >> 16);
+	if (fp.fail() || (ds[4] != 0) || (bpp != 1))
+		return false;
+
+	width = ds[1];
+	height = (ds[2] < 0) ? -ds[2] : ds[2];
+
+	int      lrow = (width * bpp + 31) / 32 * 4;
+	int32_t  lsize = (ds[5] > 0) ? ds[5] : (lrow * height);
+	uint8_t* lbuf = new (std::nothrow) uint8_t[lsize];
+	if (lbuf == NULL)
+		return false;
+
+	uint32_t rgb[2];
+	fp.read((char*)&rgb[0], sizeof(rgb));
+	if (fp.gcount() != sizeof(rgb)) {
+		delete[] lbuf;
+		return false;
+	}
+
+	fp.seekg((((long)ws[6] << 16) | ws[5]), fp.beg);
+	fp.read((char*)lbuf, lsize);
+	if (fp.gcount() != lsize) {
+		delete[] lbuf;
+		return false;
+	}
+	fp.close();
+
+	bits = new (std::nothrow) uint8_t[width * height];
+	if (bits == NULL) {
+		delete[] lbuf;
+		return false;
+	}
+
+	uint8_t* lbits;
+	int      lpitch;
+	if (ds[2] < 0) {
+		lbits = lbuf;
+		lpitch = lrow;
+	}
+	else {
+		lbits = lbuf + ((height - 1) * lrow);
+		lpitch = -lrow;
+	}
+
+	uint8_t* src, * dst;
+	for (int y = 0; y < height; ++y) {
+		src = lbits + (y * lpitch);
+
+		if (ds[2] < 0)
+			dst = bits + ((height - 1 - y) * width);
+		else
+			dst = bits + (y * width);
+
+		for (int x = 0; x < width; ++x)
+			*dst++ = rgb[(src[x / 8] >> (7 - x % 8)) & 1] == 0;
+	}
+	delete[] lbuf;
+
+	if (res.size() == 0)
+	{
+		res.resize(width);
+
+		for (int x = 0; x < height; ++x) {
+			res[x].resize(height);
+		}
+	}
+	int k = 0;
+	for (int y = 0; y < height; ++y) {
+		for (int x = 0; x < width; ++x) {
+			res[y][x] = bits[k++];
+		}
+	}
+	delete[] bits;
+	return true;
 }
 
 void temptest2d::fill_lengths_having_centers_with_pairs(std::vector<std::vector<int>>& fractures_centers, std::vector<std::vector<int>>& fractures, const std::vector<std::pair<int, int>>& old_coords, const std::vector<std::pair<int, int>>& new_coords, int min_len, int max_len)
@@ -1446,7 +1555,7 @@ double temptest2d::f_computing(const std::vector<std::vector<int>>& fractures, c
 double temptest2d::w_i(int i)
 {
 	//double res = 2 * double(Nw - i) / (Nw * Nw + Nw);
-	double res = double(rand() % RAND_MAX) / RAND_MAX / 100.;
+	double res = double(rand() % RAND_MAX) / RAND_MAX / 500.;
 	return res;
 }
 

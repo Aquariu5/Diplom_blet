@@ -43,6 +43,8 @@ public:
 
 	void update_fracture(std::vector<std::vector<int>>& fractures, const std::pair<int, int>& old_point, const std::pair<int, int>& new_point, int len);
 
+	bool fromImageToVector(std::string filename, std::vector<std::vector<int>>& res, int& width, int& height);
+
 	void fill_lengths_having_centers_with_pairs(
 		std::vector<std::vector<int>>& fractures_centers, // поправим на основе пар координаты
 		std::vector<std::vector<int>>& fractures,
